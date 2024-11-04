@@ -5,7 +5,9 @@ export const newListBtn = document.getElementById("addNewList");
 export const taskBody = document.querySelector(".task-body");
 export const addTaskBtn = document.querySelector(".addTask-btn");
 export const formContainer = document.querySelector(".form-container");
-export const myListsH3 = sidebarBody.querySelectorAll("h3");
+export const projectTitle = document.querySelector("#projectTitle");
+
+
 
 export let addTaskForm = 
             `<form action="/" id="addTaskForm">

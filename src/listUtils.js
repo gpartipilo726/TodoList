@@ -1,23 +1,23 @@
 //new task logic goes here
 import {taskBody} from "./dom.js";
 
- export class List {
+ class List {
     constructor(name){
         this.name = name;
-        this.tasks = [];
     }
     
-    addNewTask (title, date, priority, description){
-        let task = {
-            title: title,
-            date: date,
-            priority: priority,
-            description: description
-        }
-        this.tasks.push(task);
-    }
 
-    printTasks (){
+}
+
+const list = {
+    tasks: [],
+    printTest: function (){
+        console.log("INSIDE LIST WHAT UP");
+    },
+    addNewTask: function (tasksObj){
+        this.tasks.push(taskObj);
+    },
+    printTasks: function (){
         this.tasks.forEach((task) =>{
             taskBody.innerHTML +=
             `<div class="task">
@@ -36,5 +36,31 @@ import {taskBody} from "./dom.js";
                 </div>
             </div>`
         });
+    }, 
+    getTaskData: function (){
+        const taskName = document.querySelector('#projectName');
+        const taskDueDate = document.querySelector('#project-date');
+        const taskPriority = document.querySelector('#project-priority');
+        const taskDescription = document.querySelector('#project-desc');
+
+        return {
+            taskName: taskName.value,
+            dueDate: taskDueDate.value,
+            priority: taskPriority.value,
+            taskDescription: taskDescription.value,
+        }
     }
+}
+
+export function assignListMethods(listObj){
+    
+    Object.assign(listObj, list);
+
+}
+
+export function createListObject(newListText){
+
+    let listObj = new List(newListText);
+    localStorage.setItem(newListText, JSON.stringify(listObj));
+    return JSON.parse(localStorage.getItem(newListText));
 }

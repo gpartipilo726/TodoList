@@ -1,8 +1,7 @@
 import "./styles.css";
-import {sidebarBody, newListBtn, taskBody, addTaskBtn, formContainer, addTaskForm, myListsH3} from "./dom.js";
-import {List} from "./listUtils.js";
+import {sidebarBody, newListBtn, taskBody, addTaskBtn, formContainer, addTaskForm, projectTitle} from "./dom.js";
+import {createListObject, assignListMethods} from "./listUtils.js";
 
-let myLists = [];
 
 newListBtn.addEventListener("click", (e) =>{
     const inputField = document.createElement("input");
@@ -12,21 +11,21 @@ newListBtn.addEventListener("click", (e) =>{
     inputField.value = '';
     sidebarBody.appendChild(inputField);
     newListBtn.disabled = true;
+
     
     //dynamicly created input field
     const addNewListField = document.getElementById("AddNewList-input");
     addNewListField.addEventListener("keyup", (e) =>{
-    let newList = addNewListField.value
+    let newListText = addNewListField.value
 
         if(e.key === "Enter"){
-            sidebarBody.innerHTML +=`<h3>${newList}</h3>`;
+            sidebarBody.innerHTML +=`<h3>${newListText}</h3>`;
             document.getElementById("AddNewList-input").remove();
             newListBtn.disabled = false;
             
-            let listObj = new List(newList);
-            myLists.push(listObj);
+            
+            addEventListener();
 
-            console.log(myLists);
         }
     
     });
@@ -35,45 +34,73 @@ newListBtn.addEventListener("click", (e) =>{
 });
 
 
-myListsH3.addEventListener("click", (e) => {
-    console.log(e.target.value);
-
-    if (e.target === "h3"){
-        const listItem = e.target.closest("h3");
-        taskBody.textContent = '';
-        //find list
-        //print tasks 
-        console.log(listItem.textContent);
-        //myLists.find(h3.value)
-    }
 
 
 
-});
+
+function addEventListener(){
+    let myListsH3 = sidebarBody.querySelectorAll("h3");
+
+    myListsH3.forEach((list) =>{
+        // if(list.getAttribute('hasListener')){
+        //     return;
+        // }
+
+        list.addEventListener("click", (e) =>{
+            //print lists
+            let h3Target = e.target.closest("h3");
+            projectTitle.textContent = h3Target.textContent;
+            taskBody.innerHTML = '';
+            
+            //find clicked h3 in array
+            //pull in the object stored in array
+            //print object tasks to DOM   
+        });
+    });
+}
 
 
 
+// myListsH3.addEventListener("click", (e) => {
+//     console.log(e.target.value);
+
+//     if (e.target === "h3"){
+//         const listItem = e.target.closest("h3");
+//         taskBody.textContent = '';
+//         //find list
+//         //print tasks 
+//         console.log(listItem.textContent);
+//         //myLists.find(h3.value)
+//     }
+
+
+
+// });
+
+
+
+
+//Add New Task form button
 addTaskBtn.addEventListener("click", () =>{
     
     addTaskBtn.style.display = 'none';
     formContainer.innerHTML = addTaskForm;
     const submitBtn = document.querySelector("#submit");
 
+    //submit button for "Add New Task"
     submitBtn.addEventListener("click", (e) =>{
         e.preventDefault();
         document.getElementById("addTaskForm").remove();
 
         addTaskBtn.style.display = 'block';
 
-        myListsH3.forEach((list) =>{
-            list.addEventListener("click", (e) =>{
-                //print lists
-                let arraylocation = list.find(() => list.textContent) 
-                //find clicked h3 in array
-                //pull in the object stored in array
-                //print object tasks to DOM   
-            });
-        });
+        //create list object and adds it to local storage
+        let listObj = createListObject(projectTitle.textContent);   
+        //gets object and assigns methods to it
+        assignListMethods(listObj);
+        let taskData = listObj.getTaskData();
+        listObj.addNewTask(taskData);
+        listObj.printTasks();
         
     });
 
