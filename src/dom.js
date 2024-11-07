@@ -18,9 +18,9 @@ export let addTaskForm =
                     <input id="project-date" type="date">
                     <label for="project-priority">Priority</label>
                     <select name="project-priority" id="project-priority">
-                        <option value="1">High</option>
-                        <option value="2">Medium</option>
-                        <option value="3">Low</option>
+                        <option value="High">High</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Low">Low</option>
                     </select>
                     <label for="project-desc">Description</label>
                     <textarea name="project-desc" id="project-desc"></textarea>
