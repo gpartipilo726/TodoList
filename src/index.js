@@ -3,6 +3,18 @@ import {sidebarBody, newListBtn, taskBody, addTaskBtn, formContainer, addTaskFor
 import {createListObject, assignListMethods, createList} from "./listUtils.js";
 
 
+document.addEventListener("DOMContentLoaded", () =>{
+
+    for(let i = 0; i < localStorage.length; i++){
+        let key = localStorage.key(i);
+        
+        sidebarBody.innerHTML += `<h3>${key}</h3>`
+    }
+    addListListener();
+
+});
+
+
 newListBtn.addEventListener("click", (e) =>{
     const inputField = document.createElement("input");
     inputField.type = 'text';
@@ -25,9 +37,10 @@ newListBtn.addEventListener("click", (e) =>{
             
             
             //create list object 
-             const newListObj = createList(projectTitle.textContent); 
-             localStorage.setItem(projectTitle.textContent, JSON.stringify(newListObj));
-            addEventListener();
+             const newListObj = createList(newListText); 
+             console.log(newListObj);
+             localStorage.setItem(newListText, JSON.stringify(newListObj));
+            addListListener();
 
         }
     
@@ -42,7 +55,7 @@ newListBtn.addEventListener("click", (e) =>{
 
 
 
-function addEventListener(){
+function addListListener(){
     let myListsH3 = sidebarBody.querySelectorAll("h3");
 
     myListsH3.forEach((list) =>{
@@ -55,16 +68,17 @@ function addEventListener(){
             //clears previous tasks from body
             taskBody.innerHTML = '';
 
-            //START HERE
             
             //IF LIST IS IN LOCAL STORAGE
             if(localStorage.getItem(h3Target.textContent) != null){
                 console.log("inside local storage if statement");
                 //get list from local storage and parse it back into an object
                 let List = JSON.parse(localStorage.getItem(projectTitle.textContent));
+                assignListMethods(List);
 
                 //print its contents
                 List.printTasks();
+
             }
 
         });
@@ -102,7 +116,11 @@ addTaskBtn.addEventListener("click", () =>{
     const taskPriority = document.querySelector('#project-priority');
     const taskDescription = document.querySelector('#project-desc');
     const submitBtn = document.querySelector("#submit");
+    const listTitle = projectTitle.textContent;
     
+    //get list from local storage
+    let existingList = JSON.parse(localStorage.getItem(listTitle));
+    assignListMethods(existingList);
 
     //submit button for "Add New Task"
     submitBtn.addEventListener("click", (e) =>{
@@ -110,18 +128,18 @@ addTaskBtn.addEventListener("click", () =>{
         document.getElementById("addTaskForm").remove();
 
         addTaskBtn.style.display = 'block';
-
-        //get list from local storage
-        let existingList = JSON.parse(localStorage.getItem(projectTitle.textContent));
-
+        
         //converts user input into an object to pass in the next function
         let taskData = existingList.getTaskData(taskName.value, taskDueDate.value, taskPriority.value, taskDescription.value);
         
+        console.log("Before adding New task: " + JSON.stringify(existingList));
         //adds taskdata object to the array stored in the list object       
-        listObj.addNewTask(taskData);
+        existingList.addNewTask(taskData);
+        localStorage.setItem(listTitle, JSON.stringify(existingList));
+        console.log("After adding New task: " + JSON.stringify(existingList));
         
         //prints tasks to DOM
-        listObj.printTasks();
+        existingList.printTasks();
        
 
         
@@ -130,5 +148,18 @@ addTaskBtn.addEventListener("click", () =>{
 
 
 });
+
+function AddDeleteBtn () {
+    const delBtns = document.querySelectorAll('.taskDel-btn');
+    const currentTaskTitle = document.
+
+    delBtns.forEach((button) =>{
+        delBtn.addEventListener('click', () =>{
+
+
+        });
+    })
+
+}
 
 
